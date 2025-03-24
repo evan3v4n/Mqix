@@ -25,6 +25,24 @@ pushed = False
 direction = "horizontal"
 can_change_direction = False
 
+def modify_marker_direction():
+    global direction, can_change_direction
+
+    # Allow direction change when at a border (corner of the movement path)
+    at_horizontal_border = marker_pos.x <= border or marker_pos.x >= screen_width - border
+    at_vertical_border = marker_pos.y <= border or marker_pos.y >= screen_height - border
+
+    if at_horizontal_border and at_vertical_border:
+        can_change_direction = True
+
+    # Change direction only if allowed
+    if can_change_direction:
+        if key[pygame.K_UP] or key[pygame.K_DOWN]:
+            direction = "vertical"
+        elif key[pygame.K_LEFT] or key[pygame.K_RIGHT]:
+            direction = "horizontal"
+        can_change_direction = False
+
 while running:
     pygame.time.delay(100)
     window.fill(bg_color)
@@ -52,20 +70,9 @@ while running:
             marker_pos.y += vel
             can_change_direction = False
 
-    # Allow direction change when at a border (corner of the movement path)
-    if marker_pos.x <= border or marker_pos.x >= screen_width - border:
-        can_change_direction = True
-    if marker_pos.y <= border or marker_pos.y >= screen_height - border:
-        can_change_direction = True
-
-    # Change direction only if allowed
-    if can_change_direction:
-        if key[pygame.K_UP] or key[pygame.K_DOWN]:
-            direction = "vertical"
-        elif key[pygame.K_LEFT] or key[pygame.K_RIGHT]:
-            direction = "horizontal"
+    modify_marker_direction()
     
-
+    # Draw the marker
     pygame.draw.circle(window, 'green', marker_pos, marker_diameter)
 
     pygame.display.flip()
