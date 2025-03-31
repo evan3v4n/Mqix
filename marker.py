@@ -48,5 +48,4 @@ class Marker:
 
     def draw(self, window):
         """Draw the marker."""
-        self.push()
         pygame.draw.circle(window, 'green', self.pos, self.marker_diameter)
