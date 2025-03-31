@@ -12,13 +12,17 @@ class Marker:
         self.pos = pygame.Vector2(screen_width / 2, screen_height - (border / 2))
         self.direction = "horizontal"
         self.can_change_direction = False
+        self.at_horizontal_border = True
+        self.at_vertical_border = False
+
+    def update_border_status(self):
+        """Recalculate if the marker is at a horizontal or vertical border."""
+        self.at_horizontal_border = self.pos.x <= self.border or self.pos.x >= self.screen_width - self.border
+        self.at_vertical_border = self.pos.y <= self.border or self.pos.y >= self.screen_height - self.border
 
     def modify_direction(self, keys):
         """Allow direction change only at corners."""
-        at_horizontal_border = self.pos.x <= self.border or self.pos.x >= self.screen_width - self.border
-        at_vertical_border = self.pos.y <= self.border or self.pos.y >= self.screen_height - self.border
-
-        if at_horizontal_border and at_vertical_border:
+        if (self.at_horizontal_border and self.at_vertical_border) :
             self.can_change_direction = True
 
         if self.can_change_direction:
@@ -40,7 +44,9 @@ class Marker:
                 self.pos.y -= self.vel
             elif keys[pygame.K_DOWN] and self.pos.y < self.screen_height - self.border:
                 self.pos.y += self.vel
+        self.update_border_status() 
 
     def draw(self, window):
         """Draw the marker."""
+        self.push()
         pygame.draw.circle(window, 'green', self.pos, self.marker_diameter)
