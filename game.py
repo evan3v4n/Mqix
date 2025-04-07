@@ -13,7 +13,7 @@ clock = pygame.time.Clock()
 bg_color = (252, 215, 183)
 screen_width = window.get_width()
 screen_height = window.get_height()
-border = 20 # distance of the border from the edge of the screen
+border = 20 # distance of the initial margin from the edge of the screen
 border_rect = pygame.Rect(0, 0, screen_width - border, screen_height - border)
 border_rect.center = (screen_width/2, screen_height/2)
 
@@ -31,7 +31,6 @@ while running:
 
     key = pygame.key.get_pressed()
     marker.move(key)
-    marker.modify_direction(key)
     marker.draw(window)
 
     pygame.display.flip()
