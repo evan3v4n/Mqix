@@ -13,28 +13,30 @@ clock = pygame.time.Clock()
 bg_color = (252, 215, 183)
 screen_width = window.get_width()
 screen_height = window.get_height()
-border = 20 # distance of the border from the edge of the screen
-border_rect = pygame.Rect(0, 0, screen_width - border, screen_height - border)
+initial_margin = 50 # distance of the border from the edge of the screen
+border_rect = pygame.Rect(0, 0, screen_width - (2*initial_margin), screen_height - (2*initial_margin))
 border_rect.center = (screen_width/2, screen_height/2)
 
 #create a marker instance
-marker = Marker(screen_width, screen_height, border)
+marker = Marker(screen_width, screen_height, initial_margin)
 
 while running:
     pygame.time.delay(100)
     window.fill(bg_color)
-    pygame.draw.rect(window, 'black', border_rect, 3)
+    pygame.draw.rect(window, 'black', border_rect,1)
+    marker.draw(window)
+
+    pygame.display.flip()
+    #print(f"colour: {window.get_at((initial_margin, initial_margin))}")
     for event in pygame.event.get():
         #closing the window when the close button is clicked
         if event.type == pygame.QUIT:
             running = False
 
     key = pygame.key.get_pressed()
-    marker.move(key)
-    marker.modify_direction(key)
-    marker.draw(window)
+    marker.move(key, window)
 
-    pygame.display.flip()
+
     clock.tick(60)
 
 pygame.quit()
