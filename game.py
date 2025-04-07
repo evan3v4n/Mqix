@@ -34,8 +34,8 @@ while running:
             running = False
 
     key = pygame.key.get_pressed()
-    marker.move(key, window)
-
+    marker.move(key)
+    marker.draw(window)
 
     clock.tick(60)
 
