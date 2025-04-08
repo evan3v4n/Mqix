@@ -10,8 +10,8 @@ class Marker:
         self.push_points = []  # List to track vertices during push
 
         # Start at bottom center
-        self.pos = pygame.Vector2(screen_width / 2, screen_height - initial_margin)
-        self.pushed = False
+        self.pos = pygame.Vector2( initial_margin, initial_margin)
+        self.pushed = False 
 
     def move(self, keys):
         """Move the marker based on pixel colors around it."""
@@ -28,17 +28,18 @@ class Marker:
         can_move_down = False
 
         # Check pixels in each direction, but only if within window bounds
-        if self.initial_margin < x - self.vel <= self.screen_width - self.initial_margin and 0 <= y < self.screen_height:
-            can_move_left = surface.get_at((x - self.vel, y))[0:3] = (0, 0, 0)
+        if self.initial_margin <= x - 1 <= self.screen_width - self.initial_margin and 0 <= y < self.screen_height:
+            can_move_left = (surface.get_at((x - 1,y))[0:3] == (0, 0, 0))
     
-        if self.initial_margin <= x + self.vel < self.screen_width - self.initial_margin and 0 <= y < self.screen_height:
-            can_move_right = surface.get_at((x + self.vel, y))[0:3] = (0, 0, 0)
+        if self.initial_margin <= x + 1 < self.screen_width - self.initial_margin and self.initial_margin <= y < self.screen_height - self.initial_margin:
+            can_move_right = (surface.get_at((x + 1, y))[0:3] == (0, 0, 0))
         
-        if 0 <= x < self.screen_width and self.initial_margin <= y - self.vel < self.screen_height - self.initial_margin:
-            can_move_up = surface.get_at((x, y - self.vel))[0:3] != (0, 0, 0)
+        if 0 <= x < self.screen_width and self.initial_margin <= y - 1 < self.screen_height - self.initial_margin:
+            can_move_up = (surface.get_at((x, y - 1))[0:3] == (0, 0, 0))
         
-        if 0 <= x < self.screen_width and self.initial_margin <= y + self.vel < self.screen_height:
-            can_move_down = surface.get_at((x, y + self.vel))[0:3] != (0, 0, 0)
+        if 0 <= x < self.screen_width and self.initial_margin <= y + 1 < self.screen_height:
+            can_move_down = (surface.get_at((x, y + 1))[0:3] == (0, 0, 0))
+            
         
         # Move based on key presses and available directions
         if keys[pygame.K_LEFT] and can_move_left:
@@ -52,19 +53,14 @@ class Marker:
 
 
         # Check if marker has moved outside the initial border
-        if (self.pos.x < self.initial_margin or 
-            self.pos.x > self.screen_width - self.initial_margin or
-            self.pos.y < self.initial_margin or 
-            self.pos.y > self.screen_height - self.initial_margin):
-            
-            if self.pos.x < self.initial_margin:
-                self.pos.x = self.initial_margin
-            elif self.pos.x > self.screen_width - self.initial_margin:
-                self.pos.x = self.screen_width - self.initial_margin
-            if self.pos.y < self.initial_margin:
-                self.pos.y = self.initial_margin
-            elif self.pos.y > self.screen_height - self.initial_margin:
-                self.pos.y = self.screen_height - self.initial_margin
+        if self.pos.x < self.initial_margin:
+            self.pos.x = self.initial_margin
+        elif self.pos.x > self.screen_width - self.initial_margin -1:
+            self.pos.x = self.screen_width - self.initial_margin -1
+        if self.pos.y < self.initial_margin:
+            self.pos.y = self.initial_margin            
+        elif self.pos.y > self.screen_height - self.initial_margin -1:
+            self.pos.y = self.screen_height - self.initial_margin - 1
         
         # If in push mode, add current position to push points
         if self.pushed:
@@ -73,6 +69,7 @@ class Marker:
     def push(self, border):
         """Initiates push mode when marker moves outside initial border."""
         if not self.pushed:
+            # push marker inside the border
             self.push_points = [pygame.Vector2(self.pos)]
             self.pushed = True
 
