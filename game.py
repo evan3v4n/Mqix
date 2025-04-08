@@ -11,11 +11,13 @@ running = True
 clock = pygame.time.Clock()
 
 #font setup
-font = pygame.font.SysFont('DroidSans', 30)
-lives_text = font.render('LIVES: ', True, 'black')
-one_life = font.render('*', True, 'black')
-two_lives = font.render('* *', True, 'black')
-three_lives = font.render('* * *', True, 'black')
+font_small = pygame.font.SysFont('DroidSans', 30)
+font_big = pygame.font.SysFont('DroidSans', 100)
+game_over_text = font_big.render('Game Over', True, 'black')
+lives_text = font_small.render('LIVES: ', True, 'black')
+one_life = font_small.render('*', True, 'black')
+two_lives = font_small.render('* *', True, 'black')
+three_lives = font_small.render('* * *', True, 'black')
 
 # window related variables
 bg_color = (252, 215, 183)
@@ -47,6 +49,16 @@ while running:
         #closing the window when the close button is clicked
         if event.type == pygame.QUIT:
             running = False
+        
+    #checking game over condition
+    if marker.lives == 0:
+            #display game over text
+            window.blit(game_over_text, (screen_width//2 - 200, screen_height//2 - 50))
+            pygame.display.flip()
+            pygame.time.delay(5000)
+            print("Game Over")
+            running = False
+            break
 
     key = pygame.key.get_pressed()
     if key[pygame.K_SPACE]:

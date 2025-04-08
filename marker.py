@@ -116,10 +116,16 @@ class Marker:
             # If true, update border using vertices in push_points
             self.pushed = False
             self.push_points = []
-            
+
     def reduce_lives(self):
         """Reduces lives by 1."""
         self.lives -= 1
+        if self.pushed:
+            self.pushed = False
+            #Reset marker position to the starting point of the push
+            self.pos = self.push_points[0]
+            #Reset the push points
+            self.push_points = []
         
         
     def draw(self, window):
