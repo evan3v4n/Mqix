@@ -25,9 +25,9 @@ while running:
     window.fill(bg_color)
     pygame.draw.rect(window, 'black', border_rect,1)
     #pygame.display.flip()
-    print(f"marker pos: {marker.pos.x}, {marker.pos.y}")
-    print(f"colour at marker right: {window.get_at(( int(marker.pos.x + 1) , int(marker.pos.y)))}")
-    print(f"colour: {window.get_at((749, 50))}")
+    #print(f"marker pos: {marker.pos.x}, {marker.pos.y}")
+    #print(f"colour at marker right: {window.get_at(( int(marker.pos.x + 1) , int(marker.pos.y)))}")
+    #print(f"colour: {window.get_at((749, 50))}")
     for event in pygame.event.get():
         #closing the window when the close button is clicked
         if event.type == pygame.QUIT:
