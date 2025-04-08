@@ -8,10 +8,12 @@ class Marker:
         self.screen_height = screen_height
         self.initial_margin = initial_margin
         self.push_points = []  # List to track vertices during push
-
+        self.lives = 3  # Number of lives for the marker
         # Start at bottom center
-        self.pos = pygame.Vector2( initial_margin, initial_margin)
+        self.pos = pygame.Vector2( self.screen_width//2, screen_height - self.initial_margin - 1)
         self.pushed = False 
+
+
 
     def move(self, keys):
         """Move the marker based on pixel colors around it."""
@@ -114,7 +116,11 @@ class Marker:
             # If true, update border using vertices in push_points
             self.pushed = False
             self.push_points = []
-
+            
+    def reduce_lives(self):
+        """Reduces lives by 1."""
+        self.lives -= 1
+        
         
     def draw(self, window):
         """Draw the marker and push line if in push mode."""
