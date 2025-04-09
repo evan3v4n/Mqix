@@ -13,12 +13,12 @@ clock = pygame.time.Clock()
 bg_color = (252, 215, 183)
 screen_width = window.get_width()
 screen_height = window.get_height()
-border = 20 # distance of the border from the edge of the screen
-border_rect = pygame.Rect(0, 0, screen_width - border, screen_height - border)
+initial_margin = 50 # distance of the border from the edge of the screen
+border_rect = pygame.Rect(0, 0, screen_width - (initial_margin*2), screen_height - (initial_margin*2))
 border_rect.center = (screen_width/2, screen_height/2)
 
 #create a marker instance
-marker = Marker(screen_width, screen_height, border)
+marker = Marker(screen_width, screen_height, initial_margin)
 
 while running:
     pygame.time.delay(100)
