@@ -41,11 +41,7 @@ while running:
     elif marker.lives == 1:
         window.blit(one_life, (screen_width - 100, initial_margin//2))
     pygame.draw.rect(window, 'black', border_rect,1)
-<<<<<<< HEAD
-    #pygame.display.flip()
-=======
     
->>>>>>> marker-movement
     #print(f"marker pos: {marker.pos.x}, {marker.pos.y}")
     #print(f"colour at marker right: {window.get_at(( int(marker.pos.x + 1) , int(marker.pos.y)))}")
     #print(f"colour: {window.get_at((749, 50))}")
