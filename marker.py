@@ -49,15 +49,19 @@ class Marker:
             if x == self.initial_margin and self.initial_margin < y < self.screen_height - self.initial_margin:
                 self.pos.x = self.initial_margin + 1
                 self.moving_left = True
+                self.moving_right = self.moving_up = self.moving_down = False
             elif x == self.screen_width - self.initial_margin -1 and self.initial_margin < y < self.screen_height - self.initial_margin: 
                 self.pos.x = self.screen_width - self.initial_margin - 2
                 self.moving_right = True
+                self.moving_left = self.moving_up = self.moving_down = False
             elif y == self.initial_margin and self.initial_margin < x < self.screen_width - self.initial_margin:
                 self.pos.y = self.initial_margin + 1
                 self.moving_down = True
+                self.moving_up = self.moving_left = self.moving_right = False
             elif y == self.screen_height - self.initial_margin -1 and self.initial_margin < x < self.screen_width - self.initial_margin:
                 self.pos.y = self.screen_height - self.initial_margin - 2
                 self.moving_up = True
+                self.moving_down = self.moving_left = self.moving_right = False
             #corners of the border
             elif x == self.initial_margin and y == self.initial_margin:
                 self.pos.x = self.initial_margin + 1
@@ -92,6 +96,7 @@ class Marker:
                 self.turn_points.append(pygame.Vector2(self.pos))
             self.pos.x -= self.vel
             self.moving_left = True
+            self.moving_right = self.moving_up = self.moving_down = False
             self.add_push_point(pygame.Vector2(self.pos))
 
         elif keys[pygame.K_RIGHT] and can_move_right:
@@ -99,18 +104,21 @@ class Marker:
                 self.turn_points.append(pygame.Vector2(self.pos))
             self.pos.x += self.vel
             self.moving_right = True
+            self.moving_left = self.moving_up = self.moving_down = False
             self.add_push_point(pygame.Vector2(self.pos))
         elif keys[pygame.K_UP] and can_move_up:
             if not self.moving_up and self.pushed:
                 self.turn_points.append(pygame.Vector2(self.pos))
             self.pos.y -= self.vel
             self.moving_up = True
+            self.moving_down = self.moving_left = self.moving_right = False
             self.add_push_point(pygame.Vector2(self.pos))
         elif keys[pygame.K_DOWN] and can_move_down:
             if not self.moving_down and self.pushed:
                 self.turn_points.append(pygame.Vector2(self.pos))
             self.pos.y += self.vel
             self.moving_down = True
+            self.moving_up = self.moving_left = self.moving_right = False
             self.add_push_point(pygame.Vector2(self.pos))
 
 
