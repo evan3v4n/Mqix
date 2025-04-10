@@ -31,7 +31,7 @@ border_rect.center = (screen_width/2, screen_height/2)
 #create a marker instance
 marker = Marker(screen_width, screen_height, initial_margin)
 #create a board instance
-board = Board(screen_width,screen_height,initial_margin,window)
+board = Board(screen_width,screen_height,initial_margin,window,bg_color)
 
 while running:
     pygame.time.delay(100)
@@ -43,6 +43,15 @@ while running:
         window.blit(two_lives, (screen_width - 100, initial_margin//2))
     elif marker.lives == 1:
         window.blit(one_life, (screen_width - 100, initial_margin//2))
+
+    #square of red, so when you claim area colour appears
+    pygame.draw.polygon(window,(238,87,35),[(initial_margin-1,initial_margin-1),
+                                            (screen_height-1-initial_margin,initial_margin-1),
+                                            (screen_width-1-initial_margin,screen_width-1-initial_margin),
+                                            (initial_margin-1,screen_width-1-initial_margin)])
+    #draw window
+    board.draw(window)
+    
     pygame.draw.rect(window, 'black', border_rect,1)
     
     #print(f"marker pos: {marker.pos.x}, {marker.pos.y}")
@@ -67,18 +76,18 @@ while running:
 
     #TESTING REMOVE LATER
     if key[pygame.K_p]:
-        board.update_border([(100, 100), (200, 100), (200, 200), (100, 200)])
+        board.update_border([(649, 749), (649, 649), (700, 649),(700,749)])
     if key[pygame.K_o]:
-        board.update_border([(50, 50), (150, 50), (150, 150), (100, 150), (100, 250), (50, 250)])
+        board.update_border([(200,49),(200,200),(300,200),(300,600),(600,600),(600,49)])
     if key[pygame.K_i]:
-        board.update_border([(150, 150), (650, 150), (750, 450), (650, 650), (150, 650), (50, 450)]) 
-    if board.check_if_win():
+        board.update_border([(49,500),(749,500)]) 
+    if key[pygame.K_u]:
+        board.update_border([(49,700),(749,300)]) 
+    #if board.check_if_win():
         print("DONE")
-        pygame.quit()
-    pygame.draw.lines(window,'black', True, [(20,200),(980,200),(980,500)],3)
     #TESTING REMOVE LATER
 
-    board.draw(window)
+    
     
     if key[pygame.K_SPACE]:
         marker.push(None)
