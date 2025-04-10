@@ -111,6 +111,7 @@ while running:
     sparx.draw(window)
     qix.move()
     sparx.move()
+    qix.change_direction()
     
     pygame.display.flip()
     clock.tick(60)
