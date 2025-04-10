@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Environment files
+.env
+.venv/
+venv/
+ENV/
+env/
+pip-log.txt
+
+# OS / Editor specific files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Pygame cache (if using convert functions)
+*.bmp
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.wav
+*.ogg
+*.mp3
+
+# Logs
+*.log
+
+# Mac/Linux
+*.swp
