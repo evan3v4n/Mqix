@@ -10,7 +10,6 @@ dist/
 
 # Environment files
 .env
-.venv
 .venv/
 venv/
 ENV/
