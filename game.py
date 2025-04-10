@@ -115,6 +115,8 @@ while running:
     #print(f"turning points: {marker.turn_points}")   
     marker.move(key)
     marker.draw(window)
+    qix.draw(window)
+    sparx.draw(window)
     
     pygame.display.flip()
     clock.tick(60)
