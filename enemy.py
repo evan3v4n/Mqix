@@ -22,7 +22,7 @@ class Enemy:
       self.change_direction() # Random initial direction
     else:
       # for sparx, start at top middle
-      self.pos =  [screen_width // 2, initial_margin + diameter] 
+      self.pos =  [screen_width // 2, initial_margin] 
       self.direction = random.choice(["left", "right"])
       self.at_vertical_initial_margin = False
       self.at_horizontal_initial_margin = True
