@@ -1,7 +1,7 @@
 import pygame
 
 class Marker:
-    def __init__(self, screen_width, screen_height, initial_margin, vel=8, marker_diameter=10):
+    def __init__(self, screen_width, screen_height, initial_margin, vel=8, marker_diameter=10, border=None):
         self.vel = vel
         self.diameter = marker_diameter
         self.screen_width = screen_width
@@ -12,7 +12,12 @@ class Marker:
         # Start at bottom center
         self.pos = pygame.Vector2( self.screen_width//2, screen_height - self.initial_margin - 1)
         self.pushed = False 
-
+        self.turn_points = []  # List to track turn points during push
+        self.border = border  # Reference to the border object
+        self.moving_left = False
+        self.moving_right = False
+        self.moving_up = False
+        self.moving_down = False
 
 
     def move(self, keys):
@@ -29,24 +34,34 @@ class Marker:
         can_move_up = False
         can_move_down = False
 
+        
+
                 # If in push mode, add current position to push points
         if self.pushed:
-            self.push_points.append(pygame.Vector2(self.pos))
             can_move_down = True
             can_move_up = True
             can_move_left = True
             can_move_right = True
 
             #pushing marker inside the border
+
             #between the side of the border
             if x == self.initial_margin and self.initial_margin < y < self.screen_height - self.initial_margin:
                 self.pos.x = self.initial_margin + 1
+                self.moving_left = True
+                self.moving_right = self.moving_up = self.moving_down = False
             elif x == self.screen_width - self.initial_margin -1 and self.initial_margin < y < self.screen_height - self.initial_margin: 
                 self.pos.x = self.screen_width - self.initial_margin - 2
+                self.moving_right = True
+                self.moving_left = self.moving_up = self.moving_down = False
             elif y == self.initial_margin and self.initial_margin < x < self.screen_width - self.initial_margin:
                 self.pos.y = self.initial_margin + 1
+                self.moving_down = True
+                self.moving_up = self.moving_left = self.moving_right = False
             elif y == self.screen_height - self.initial_margin -1 and self.initial_margin < x < self.screen_width - self.initial_margin:
                 self.pos.y = self.screen_height - self.initial_margin - 2
+                self.moving_up = True
+                self.moving_down = self.moving_left = self.moving_right = False
             #corners of the border
             elif x == self.initial_margin and y == self.initial_margin:
                 self.pos.x = self.initial_margin + 1
@@ -75,16 +90,36 @@ class Marker:
             if 0 <= x < self.screen_width and self.initial_margin <= y + 1 < self.screen_height:
                 can_move_down = (surface.get_at((x, y + 1))[0:3] == (0, 0, 0))
             
-        
         # Move based on key presses and available directions
         if keys[pygame.K_LEFT] and can_move_left:
+            if not self.moving_left and self.pushed:
+                self.turn_points.append(pygame.Vector2(self.pos))
             self.pos.x -= self.vel
+            self.moving_left = True
+            self.moving_right = self.moving_up = self.moving_down = False
+            self.add_push_point(pygame.Vector2(self.pos))
+
         elif keys[pygame.K_RIGHT] and can_move_right:
+            if not self.moving_right and self.pushed:
+                self.turn_points.append(pygame.Vector2(self.pos))
             self.pos.x += self.vel
+            self.moving_right = True
+            self.moving_left = self.moving_up = self.moving_down = False
+            self.add_push_point(pygame.Vector2(self.pos))
         elif keys[pygame.K_UP] and can_move_up:
+            if not self.moving_up and self.pushed:
+                self.turn_points.append(pygame.Vector2(self.pos))
             self.pos.y -= self.vel
+            self.moving_up = True
+            self.moving_down = self.moving_left = self.moving_right = False
+            self.add_push_point(pygame.Vector2(self.pos))
         elif keys[pygame.K_DOWN] and can_move_down:
+            if not self.moving_down and self.pushed:
+                self.turn_points.append(pygame.Vector2(self.pos))
             self.pos.y += self.vel
+            self.moving_down = True
+            self.moving_up = self.moving_left = self.moving_right = False
+            self.add_push_point(pygame.Vector2(self.pos))
 
 
         # Check if marker has moved outside the initial border
@@ -106,16 +141,47 @@ class Marker:
         """Initiates push mode when marker moves outside initial border."""
         if not self.pushed:
             # push marker inside the border
+            self.turn_points.append(pygame.Vector2(self.pos))
             self.push_points = [pygame.Vector2(self.pos)]
             self.pushed = True
+    
+    def add_push_point(self, point):
+        """Adds a point to the push points list."""
+        if self.pushed:
+            # Check if the point is not already in the list
+            if point not in self.push_points:
+                # Add the point to the push points list
+                self.push_points.append(point)
+                # Check if the point is not already in the 
+            elif len(self.push_points) > 0 and point in self.push_points:
+                self.pos = self.push_points[0]
+                # Reset the push points
+                self.push_points = []
+                self.pushed = False
+                # Reduce the lives of the marker
+                self.reduce_lives()
+        
+            
 
     def claim_territory(self, border):
         """Claims territory if marker returns to original border."""
-        if self.pushed and len(self.push_points) > 2:
-            # Check if marker returned to original border
-            # If true, update border using vertices in push_points
-            self.pushed = False
+        if border is not None:
+            if self.pushed and len(self.push_points) > 2:
+                # Check if marker returned to original border
+                # If true, update border using vertices in push_points
+                self.turn_points.append(pygame.Vector2(self.pos))
+                #print(f"Claiming territory with points: {self.turn_points}")
+                border.enclose_shape(self.turn_points)
+                self.turn_points = []
+                self.pushed = False
+                self.push_points = []
+        if border is None:
+            # If marker is not in push mode, reset the push points
+            self.turn_points.append(pygame.Vector2(self.pos))
+            #print(f"Claiming territory with points: {self.turn_points}")
             self.push_points = []
+            self.pushed = False
+            self.turn_points = []
 
     def reduce_lives(self):
         """Reduces lives by 1."""

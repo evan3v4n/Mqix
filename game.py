@@ -63,7 +63,8 @@ while running:
     key = pygame.key.get_pressed()
     if key[pygame.K_SPACE]:
         marker.push(None)
-        
+    print(f"moving left: {marker.moving_left}, moving right: {marker.moving_right}, moving up: {marker.moving_up}, moving down: {marker.moving_down}")
+    print(f"turning points: {marker.turn_points}")   
     marker.move(key)
     marker.draw(window)
     
