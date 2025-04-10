@@ -15,6 +15,7 @@ clock = pygame.time.Clock()
 font_small = pygame.font.SysFont('DroidSans', 30)
 font_big = pygame.font.SysFont('DroidSans', 100)
 game_over_text = font_big.render('Game Over', True, 'black')
+you_win_text = font_big.render('You Win!', True, 'black')
 lives_text = font_small.render('LIVES: ', True, 'black')
 one_life = font_small.render('*', True, 'black')
 two_lives = font_small.render('* *', True, 'black')
@@ -71,20 +72,27 @@ while running:
             print("Game Over")
             running = False
             break
-
+    if board.check_if_win():
+            #display game over text
+            window.blit(you_win_text, (screen_width//2 - 150, screen_height//2 - 50))
+            pygame.display.flip()
+            pygame.time.delay(5000)
+            print("You Win")
+            running = False
+            break
     key = pygame.key.get_pressed()
 
     #TESTING REMOVE LATER
-    if key[pygame.K_p]:
-        board.update_border([(649, 749), (649, 649), (700, 649),(700,749)])
-    if key[pygame.K_o]:
-        board.update_border([(200,49),(200,200),(300,200),(300,600),(600,600),(600,49)])
-    if key[pygame.K_i]:
-        board.update_border([(49,500),(749,500)]) 
-    if key[pygame.K_u]:
-        board.update_border([(49,700),(749,300)]) 
-    #if board.check_if_win():
-        print("DONE")
+    # if key[pygame.K_p]:
+    #     board.update_border([(649, 749), (649, 649), (700, 649),(700,749)])
+    # if key[pygame.K_o]:
+    #     board.update_border([(200,49),(200,200),(300,200),(300,600),(600,600),(600,49)])
+    # if key[pygame.K_i]:
+    #     board.update_border([(49,500),(749,500)]) 
+    # if key[pygame.K_u]:
+    #     board.update_border([(49,700),(749,300)]) 
+    # #if board.check_if_win():
+    #     print("DONE")
     #TESTING REMOVE LATER
 
     
