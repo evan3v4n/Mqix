@@ -1,5 +1,6 @@
 import pygame
 from marker import Marker 
+from board import Board
 
 # game setup
 pygame.init()
@@ -29,6 +30,8 @@ border_rect.center = (screen_width/2, screen_height/2)
 
 #create a marker instance
 marker = Marker(screen_width, screen_height, initial_margin)
+#create a board instance
+board = Board(screen_width,screen_height,initial_margin,window,bg_color)
 
 while running:
     pygame.time.delay(100)
@@ -40,6 +43,15 @@ while running:
         window.blit(two_lives, (screen_width - 100, initial_margin//2))
     elif marker.lives == 1:
         window.blit(one_life, (screen_width - 100, initial_margin//2))
+
+    #square of red, so when you claim area colour appears
+    pygame.draw.polygon(window,(238,87,35),[(initial_margin-1,initial_margin-1),
+                                            (screen_height-1-initial_margin,initial_margin-1),
+                                            (screen_width-1-initial_margin,screen_width-1-initial_margin),
+                                            (initial_margin-1,screen_width-1-initial_margin)])
+    #draw window
+    board.draw(window)
+    
     pygame.draw.rect(window, 'black', border_rect,1)
     
     #print(f"marker pos: {marker.pos.x}, {marker.pos.y}")
@@ -61,6 +73,22 @@ while running:
             break
 
     key = pygame.key.get_pressed()
+
+    #TESTING REMOVE LATER
+    if key[pygame.K_p]:
+        board.update_border([(649, 749), (649, 649), (700, 649),(700,749)])
+    if key[pygame.K_o]:
+        board.update_border([(200,49),(200,200),(300,200),(300,600),(600,600),(600,49)])
+    if key[pygame.K_i]:
+        board.update_border([(49,500),(749,500)]) 
+    if key[pygame.K_u]:
+        board.update_border([(49,700),(749,300)]) 
+    #if board.check_if_win():
+        print("DONE")
+    #TESTING REMOVE LATER
+
+    
+    
     if key[pygame.K_SPACE]:
         marker.push(None)
     print(f"moving left: {marker.moving_left}, moving right: {marker.moving_right}, moving up: {marker.moving_up}, moving down: {marker.moving_down}")
