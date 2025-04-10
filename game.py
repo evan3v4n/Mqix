@@ -1,6 +1,7 @@
 import pygame
 from marker import Marker 
 from board import Board
+from enemy import Enemy
 
 # game setup
 pygame.init()
@@ -41,6 +42,9 @@ marker = Marker(screen_width, screen_height, initial_margin)
 =======
 marker = Marker(screen_width, screen_height, initial_margin,board=board)
 >>>>>>> b960ef52dd739c6149645cfee0c6f75e39e039e6
+#create enemy instances
+qix = Enemy(screen_width, screen_height, initial_margin, "qix")
+sparx = Enemy(screen_width, screen_height, initial_margin, "sparx")
 
 while running:
     pygame.time.delay(100)

@@ -2,12 +2,12 @@ import pygame
 import random
 
 class Enemy:
-  def __init__(self, screen_width, screen_height, border, vel, diameter, type):
+  def __init__(self, screen_width, screen_height, initial_margin, vel=6, diameter=10, type):
     self.vel = vel
     self.diameter = diameter
     self.screen_width = screen_width
     self.screen_height = screen_height 
-    self.border = border
+    self.initial_margin = initial_margin
     self.type = type
     self.pos = [0,0]
     
@@ -18,14 +18,14 @@ class Enemy:
 
     if type == "qix":
       # for qix, start at top right corner
-      self.pos = [screen_width - border - diameter, border + diameter]
+      self.pos = [screen_width - initial_margin - diameter, initial_margin + diameter]
       self.change_direction() # Random initial direction
     else:
       # for sparx, start at top middle
-      self.pos =  [screen_width // 2, border + diameter] 
+      self.pos =  [screen_width // 2, initial_margin + diameter] 
       self.direction = random.choice(["left", "right"])
-      self.at_vertical_border = False
-      self.at_horizontal_border = True
+      self.at_vertical_initial_margin = False
+      self.at_horizontal_initial_margin = True
       self.moving_left = self.direction == "left"
       self.moving_right = self.direction == "right"
     # initialize collision rect 
