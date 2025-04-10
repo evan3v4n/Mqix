@@ -2,7 +2,7 @@ import pygame
 import random
 
 class Enemy:
-  def __init__(self, screen_width, screen_height, initial_margin, vel=6, diameter=10, type):
+  def __init__(self, screen_width, screen_height, initial_margin, type,vel=6, diameter=10):
     self.vel = vel
     self.diameter = diameter
     self.screen_width = screen_width
@@ -32,7 +32,7 @@ class Enemy:
     self.rect = pygame.Rect(self.pos[0], self.pos[1], diameter, diameter)
   
   def move(self):
-  """Moves enemy in current direction by one pixel."""
+        """Moves enemy in current direction by one pixel."""
         if self.moving_left:
             self.pos[0] -= self.vel
         if self.moving_right:

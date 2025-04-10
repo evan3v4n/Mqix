@@ -27,21 +27,13 @@ bg_color = (252, 215, 183)
 screen_width = window.get_width()
 screen_height = window.get_height()
 initial_margin = 50 # distance of the border from the edge of the screen
-<<<<<<< HEAD
-border_rect = pygame.Rect(0, 0, screen_width - (initial_margin*2), screen_height - (initial_margin*2))
-=======
 border_rect = pygame.Rect(0,0, screen_width - (2*initial_margin), screen_height - (2*initial_margin))
->>>>>>> b960ef52dd739c6149645cfee0c6f75e39e039e6
 border_rect.center = (screen_width/2, screen_height/2)
 
 #create a board instance
 board = Board(screen_width,screen_height,initial_margin,window,bg_color)
 #create a marker instance
-<<<<<<< HEAD
-marker = Marker(screen_width, screen_height, initial_margin)
-=======
 marker = Marker(screen_width, screen_height, initial_margin,board=board)
->>>>>>> b960ef52dd739c6149645cfee0c6f75e39e039e6
 #create enemy instances
 qix = Enemy(screen_width, screen_height, initial_margin, "qix")
 sparx = Enemy(screen_width, screen_height, initial_margin, "sparx")
