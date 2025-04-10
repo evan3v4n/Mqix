@@ -1,7 +1,7 @@
 import pygame
 
 class Marker:
-    def __init__(self, screen_width, screen_height, initial_margin, vel=8, marker_diameter=10, border=None):
+    def __init__(self, screen_width, screen_height, initial_margin, vel=8, marker_diameter=10, board=None):
         self.vel = vel
         self.diameter = marker_diameter
         self.screen_width = screen_width
@@ -13,7 +13,7 @@ class Marker:
         self.pos = pygame.Vector2( self.screen_width//2, screen_height - self.initial_margin - 1)
         self.pushed = False 
         self.turn_points = []  # List to track turn points during push
-        self.border = border  # Reference to the border object
+        self.board = board  # Reference to the border object
         self.moving_left = False
         self.moving_right = False
         self.moving_up = False
@@ -134,10 +134,10 @@ class Marker:
 
         if self.push :
             if surface.get_at((int(self.pos.x),int(self.pos.y)))[0:3] == (0, 0, 0):
-                self.claim_territory(None)
+                self.claim_territory(self.board)
         
 
-    def push(self, border):
+    def push(self):
         """Initiates push mode when marker moves outside initial border."""
         if not self.pushed:
             # push marker inside the border
@@ -163,19 +163,19 @@ class Marker:
         
             
 
-    def claim_territory(self, border):
+    def claim_territory(self, board):
         """Claims territory if marker returns to original border."""
-        if border is not None:
+        if board is not None:
             if self.pushed and len(self.push_points) > 2:
                 # Check if marker returned to original border
                 # If true, update border using vertices in push_points
                 self.turn_points.append(pygame.Vector2(self.pos))
                 #print(f"Claiming territory with points: {self.turn_points}")
-                border.enclose_shape(self.turn_points)
+                board.update_border(self.turn_points)
                 self.turn_points = []
                 self.pushed = False
                 self.push_points = []
-        if border is None:
+        if board is None:
             # If marker is not in push mode, reset the push points
             self.turn_points.append(pygame.Vector2(self.pos))
             #print(f"Claiming territory with points: {self.turn_points}")

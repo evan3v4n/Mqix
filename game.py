@@ -28,10 +28,10 @@ initial_margin = 50 # distance of the border from the edge of the screen
 border_rect = pygame.Rect(0,0, screen_width - (2*initial_margin), screen_height - (2*initial_margin))
 border_rect.center = (screen_width/2, screen_height/2)
 
-#create a marker instance
-marker = Marker(screen_width, screen_height, initial_margin)
 #create a board instance
 board = Board(screen_width,screen_height,initial_margin,window,bg_color)
+#create a marker instance
+marker = Marker(screen_width, screen_height, initial_margin,board=board)
 
 while running:
     pygame.time.delay(100)
@@ -90,9 +90,9 @@ while running:
     
     
     if key[pygame.K_SPACE]:
-        marker.push(None)
-    print(f"moving left: {marker.moving_left}, moving right: {marker.moving_right}, moving up: {marker.moving_up}, moving down: {marker.moving_down}")
-    print(f"turning points: {marker.turn_points}")   
+        marker.push()
+    #print(f"moving left: {marker.moving_left}, moving right: {marker.moving_right}, moving up: {marker.moving_up}, moving down: {marker.moving_down}")
+    #print(f"turning points: {marker.turn_points}")   
     marker.move(key)
     marker.draw(window)
     
