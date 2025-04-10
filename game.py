@@ -109,6 +109,8 @@ while running:
     marker.draw(window)
     qix.draw(window)
     sparx.draw(window)
+    qix.move()
+    sparx.move()
     
     pygame.display.flip()
     clock.tick(60)
