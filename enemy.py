@@ -18,7 +18,7 @@ class Enemy:
 
   #### QIX FUNCTIONS
 
-  # check for collision by checking if touching marker's unique color?
+  # check for collision by using Rect.collide
   def qix_collide():
   """Checks for collision with player."""
 
