@@ -35,8 +35,8 @@ class Enemy:
       self.direction = random.choice(["left", "right"])
       self.at_vertical_initial_margin = False
       self.at_horizontal_initial_margin = True
-      self.moving_left = self.direction == "left"
-      self.moving_right = self.direction == "right"
+      self.moving_left = (self.direction == "left")
+      self.moving_right = (self.direction == "right")
     # initialize collision rect 
     self.rect = pygame.Rect(self.pos[0], self.pos[1], diameter, diameter)
   
@@ -153,16 +153,14 @@ class Enemy:
     # Check collision with player
     if self.rect.collidepoint((marker.pos.x, marker.pos.y)):
         self.change_direction()
-        # Reverse the target point index
-        self.target_point_index = (self.target_point_index - 1) % len(self.border_points)
+        self.target_point_index = (self.target_point_index + 1) % len(self.border_points)
         return True
 
     # Check collision with marker's push points
     for i in marker.push_points:
         if self.rect.collidepoint((i.x, i.y)):
             self.change_direction()
-            # Reverse the target point index
-            self.target_point_index = (self.target_point_index - 1) % len(self.border_points)
+            self.target_point_index = (self.target_point_index + 1) % len(self.border_points)
             marker.pos = marker.push_points[0]
             marker.push_points = []
             return True
