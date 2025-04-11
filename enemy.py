@@ -31,20 +31,99 @@ class Enemy:
     # initialize collision rect 
     self.rect = pygame.Rect(self.pos[0], self.pos[1], diameter, diameter)
   
-  def move(self):
-        """Moves enemy in current direction by one pixel."""
-        if self.moving_left:
-            self.pos[0] -= self.vel
-        if self.moving_right:
-            self.pos[0] += self.vel
-        if self.moving_up:
-            self.pos[1] -= self.vel
-        if self.moving_down:
-            self.pos[1] += self.vel
-        # Update the rect position based on the new position
-        self.rect.topleft = (self.pos[0], self.pos[1])
+    def move(self):
+      """Moves enemy based on its type."""
+      if self.type == "qix":
+        self.move_qix()
+      else:
+        self.move_sparx()
+    
+    # Update the rect position based on the new position
+    self.rect.center = (self.pos[0], self.pos[1])
 
-  #### QIX FUNCTIONS
+    def move_qix(self):
+      """Moves qix randomly within play area."""
+      # Move in current direction
+      if self.moving_left:
+        self.pos[0] -= self.vel
+      if self.moving_right:
+        self.pos[0] += self.vel
+      if self.moving_up:
+        self.pos[1] -= self.vel
+      if self.moving_down:
+        self.pos[1] += self.vel
+      
+      # Bounce off borders
+      if self.pos[0] < self.initial_margin + self.diameter:
+        self.pos[0] = self.initial_margin + self.diameter
+        self.moving_left = False
+        self.moving_right = True
+      elif self.pos[0] > self.screen_width - self.initial_margin - self.diameter:
+        self.pos[0] = self.screen_width - self.initial_margin - self.diameter
+        self.moving_left = True
+        self.moving_right = False
+      
+      if self.pos[1] < self.initial_margin + self.diameter:
+        self.pos[1] = self.initial_margin + self.diameter
+        self.moving_up = False
+        self.moving_down = True
+      elif self.pos[1] > self.screen_height - self.initial_margin - self.diameter:
+        self.pos[1] = self.screen_height - self.initial_margin - self.diameter
+        self.moving_up = True
+        self.moving_down = False
+
+  def move_sparx(self):
+    """Moves sparx along the border."""
+    # Get current target point
+    target = self.border_points[self.target_point_index]
+    
+    # Calculate direction to target
+    dx = target[0] - self.pos[0]
+    dy = target[1] - self.pos[1]
+
+    # Move toward target
+    if abs(dx) > self.vel:
+      self.pos[0] += self.vel if dx > 0 else -self.vel
+      self.moving_right = dx > 0
+      self.moving_left = dx < 0
+      self.moving_up = False
+      self.moving_down = False
+    elif abs(dy) > self.vel:
+      self.pos[1] += self.vel if dy > 0 else -self.vel
+      self.moving_up = dy < 0
+      self.moving_down = dy > 0
+      self.moving_right = False
+      self.moving_left = False
+    else:
+      self.pos = target.copy() 
+      self.target_point_index = (self.target_point_index + 1) % len(self.border_points)
+      
+      # Update direction based on next target
+      next_target = self.border_points[self.target_point_index]
+      if next_target[0] > self.pos[0]:
+        self.direction = "right"
+        self.moving_right = True
+        self.moving_left = False
+        self.moving_up = False
+        self.moving_down = False
+      elif next_target[0] < self.pos[0]:
+        self.direction = "left"
+        self.moving_right = False
+        self.moving_left = True
+        self.moving_up = False
+        self.moving_down = False
+      elif next_target[1] < self.pos[1]:
+        self.direction = "up"
+        self.moving_right = False
+        self.moving_left = False
+        self.moving_up = True
+        self.moving_down = False
+      elif next_target[1] > self.pos[1]:
+        self.direction = "down"
+        self.moving_right = False
+        self.moving_left = False
+        self.moving_up = False
+        self.moving_down = True
 
   def qix_collide(self, player_rect):
     """Checks for Qix collision with player."""
@@ -52,8 +131,6 @@ class Enemy:
       self.change_direction()
       return True
     return False
-
-  #### SPARX FUNCTIONS
 
   def sparx_collide(self, player_rect): 
     """Checks for Sparx collision with player."""
@@ -76,7 +153,6 @@ class Enemy:
           self.change_direction()
           return True
     return False
-    
     
   def change_direction(self):
     """Changes enemy's movements depending on their type."""
@@ -104,6 +180,7 @@ class Enemy:
         self.moving_up = True
         self.moving_down = False
         self.direction = "up"
+        
       
   def draw(self, screen):
     """Draws enemy icon on screen."""
