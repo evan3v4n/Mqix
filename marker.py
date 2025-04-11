@@ -155,6 +155,7 @@ class Marker:
                 # Check if the point is not already in the 
             elif len(self.push_points) > 0 and point in self.push_points:
                 self.pos = self.push_points[0]
+                self.turn_points=[]
                 # Reset the push points
                 self.push_points = []
                 self.pushed = False

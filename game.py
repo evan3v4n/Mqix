@@ -46,10 +46,10 @@ while running:
         window.blit(one_life, (screen_width - 100, initial_margin//2))
 
     #square of red, so when you claim area colour appears
-    pygame.draw.polygon(window,(238,87,35),[(initial_margin-1,initial_margin-1),
+    pygame.draw.polygon(window,(238,87,35),[(initial_margin,initial_margin),
                                             (screen_height-1-initial_margin,initial_margin-1),
                                             (screen_width-1-initial_margin,screen_width-1-initial_margin),
-                                            (initial_margin-1,screen_width-1-initial_margin)])
+                                            (initial_margin,screen_width-1-initial_margin)])
     #draw window
     board.draw(window)
     
@@ -83,16 +83,18 @@ while running:
     key = pygame.key.get_pressed()
 
     #TESTING REMOVE LATER
-    #if key[pygame.K_p]:
-    #     board.update_border([(200, 749), (200, 500), (49, 500)])
-    #if key[pygame.K_o]:
-    #     board.update_border([(200,49),(200,200),(300,200),(300,600),(600,600),(600,49)])
+    if key[pygame.K_p]:
+         board.update_border([(200, 749), (200, 500), (49, 500)])
+    if key[pygame.K_o]:
+         board.update_border([(200,49),(200,200),(300,200),(300,600),(600,600),(600,49)])
     #if key[pygame.K_i]:
     #     board.update_border([(49,500),(749,500)]) 
     #if key[pygame.K_u]:
     #     board.update_border([(49,700),(749,700)]) 
-    #if key[pygame.K_l]:
-    #   board.update_border([(49,300),(90,300),(90,500)]) 
+    if key[pygame.K_l]:
+       board.update_border([(49,300),(90,300),(90,500)]) 
+    if key[pygame.K_k]:
+       board.update_border([(600,749),(600,700),(700,700),(700,749)])
     
     
     #TESTING REMOVE LATER
