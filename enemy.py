@@ -2,14 +2,23 @@ import pygame
 import random
 
 class Enemy:
-  def __init__(self, screen_width, screen_height, initial_margin, type,vel=6, diameter=10):
+  def __init__(self, screen_width, screen_height, initial_margin, type, vel=6, diameter=10, target_point_index = 1):
     self.vel = vel
     self.diameter = diameter
+    self.target_point_index = target_point_index
     self.screen_width = screen_width
     self.screen_height = screen_height 
     self.initial_margin = initial_margin
     self.type = type
     self.pos = [0,0]
+
+    self.border_points = [
+      [initial_margin, initial_margin],  # top-left
+      [screen_width - initial_margin, initial_margin],  # top-right
+      [screen_width - initial_margin, screen_height - initial_margin],  # bottom-right
+      [initial_margin, screen_height - initial_margin]  # bottom-left
+    ]
+    self.current_segment = 0
     
     self.moving_left = False
     self.moving_right = False
@@ -31,17 +40,17 @@ class Enemy:
     # initialize collision rect 
     self.rect = pygame.Rect(self.pos[0], self.pos[1], diameter, diameter)
   
-    def move(self):
+  def move(self):
       """Moves enemy based on its type."""
       if self.type == "qix":
         self.move_qix()
       else:
         self.move_sparx()
     
-    # Update the rect position based on the new position
-    self.rect.center = (self.pos[0], self.pos[1])
+      # Update the rect position based on the new position
+      self.rect.center = (self.pos[0], self.pos[1])
 
-    def move_qix(self):
+  def move_qix(self):
       """Moves qix randomly within play area."""
       # Move in current direction
       if self.moving_left:
@@ -125,17 +134,17 @@ class Enemy:
         self.moving_up = False
         self.moving_down = True
 
-  def qix_collide(self, player_rect):
+  def qix_collide(self, marker):
     """Checks for Qix collision with player."""
-    if self.rect.colliderect(player_rect):
+    if self.rect.collidepoint((marker.pos.x, marker.pos.y)):
       self.change_direction()
       return True
     return False
 
-  def sparx_collide(self, player_rect): 
+  def sparx_collide(self, marker): 
     """Checks for Sparx collision with player."""
     # changes direction if collides with player
-    if self.rect.colliderect(player_rect):
+    if self.rect.collidepoint((marker.pos.x, marker.pos.y)):
       self.change_direction()
       return True
     return False

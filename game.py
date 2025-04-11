@@ -112,6 +112,11 @@ while running:
     qix.move()
     sparx.move()
     qix.change_direction()
+    if qix.qix_collide(marker):
+         marker.reduce_lives()
+
+    if sparx.sparx_collide(marker):
+         marker.reduce_lives()
     
     pygame.display.flip()
     clock.tick(60)
