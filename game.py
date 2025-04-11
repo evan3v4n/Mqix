@@ -83,16 +83,18 @@ while running:
     key = pygame.key.get_pressed()
 
     #TESTING REMOVE LATER
-    # if key[pygame.K_p]:
-    #     board.update_border([(649, 749), (649, 649), (700, 649),(700,749)])
-    # if key[pygame.K_o]:
+    #if key[pygame.K_p]:
+    #     board.update_border([(200, 749), (200, 500), (49, 500)])
+    #if key[pygame.K_o]:
     #     board.update_border([(200,49),(200,200),(300,200),(300,600),(600,600),(600,49)])
-    # if key[pygame.K_i]:
+    #if key[pygame.K_i]:
     #     board.update_border([(49,500),(749,500)]) 
-    # if key[pygame.K_u]:
-    #     board.update_border([(49,700),(749,300)]) 
-    # #if board.check_if_win():
-    #     print("DONE")
+    #if key[pygame.K_u]:
+    #     board.update_border([(49,700),(749,700)]) 
+    #if key[pygame.K_l]:
+    #   board.update_border([(49,300),(90,300),(90,500)]) 
+    
+    
     #TESTING REMOVE LATER
 
     

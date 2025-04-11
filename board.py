@@ -2,6 +2,8 @@ import pygame
 #pip install shapely might need to run this for on the terminal for shapely.geometry to work
 from shapely.geometry import Polygon, Point, LineString
 import math
+from itertools import chain
+
 
 class Board:
     def __init__(self, screen_width, screen_length, initial_margin, window, bg_color):
@@ -36,6 +38,7 @@ class Board:
         self.current_border.append(points)
         #create enclosed shape
         enclosed_shape=self.enclose_shape(points)
+        #print("SHAPE ENCLOSED")
         #print(list(enclosed_shape.exterior.coords))
         #however enclosed shape may or may not be the right one, of the complement or the enclosed shape whichever has a smaller area
         if (self.current_unclaimed_space.difference(enclosed_shape)).area >= enclosed_shape.area: 
@@ -70,28 +73,51 @@ class Board:
         return:
         Enclosed Polygon, new area that the push claims
         """
+        #print("START OF PROCESS")
         enclosed_shape_coords = points #keep tracks of the enclosed shape
-        unclaimed_coords = list(self.current_unclaimed_space.exterior.coords)[:-1][::-1] #coords for the shape of the unclaimed area
+        unclaimed_coords = list(self.current_unclaimed_space.exterior.coords)[:-1] #coords for the shape of the unclaimed area
         #print(unclaimed_coords)
         start_point = points[0] #start of the push
         end_point = points[len(points)-1] #end of the push
         #finds closest point to the end of push
         closest_point = min(unclaimed_coords, key=lambda point: self.distance(point, end_point))
         #print(self.is_clockwise(unclaimed_coords))
-        if self.is_clockwise(unclaimed_coords):
-            if closest_point[1]<end_point[1] and closest_point[0]==end_point[0]: #if closest point is above end point
-                unclaimed_coords.reverse()
-            elif closest_point[0]>end_point[0] and closest_point[1]==end_point[1]: #if right of end point
-                unclaimed_coords.reverse()
-        else:
-            if closest_point[1]>end_point[1] and closest_point[0]==end_point[0]: #if below end point
-                unclaimed_coords.reverse()
-            elif closest_point[0]<end_point[0] and closest_point[1]==end_point[1]: #if left of end point
-                unclaimed_coords.reverse()
+
+        #print("CHECK ORIENTATION OF ENDPOINT")
+        #print(self.check_general_direction(end_point))
+        direction = self.check_general_direction(end_point) #of the exterior of the unclaimed area, what general direction is it facing
+        
+        unclaimed_coords_temp = list(self.current_unclaimed_space.exterior.coords)[:-1]
+        unclaimed_coords = list(chain(unclaimed_coords_temp, [unclaimed_coords_temp[0]]))
+
+        #forces clockwise orientation of unclaimed's vertices for easier comparison
+        unclaimed_coords = self.make_clockwise(unclaimed_coords)
+        #determine whether going cw (clockwise) or ccw through is each scenario
+        #north facing line, closest point to LEFT of end point
+        if direction == "N" and closest_point[0]<end_point[0] and closest_point[1]==end_point[1]: 
+            unclaimed_coords = unclaimed_coords[1:][::-1] #reverse list (make ccw)
+        #south facing line, closest point to RIGHT of end point
+        elif direction == "S" and closest_point[0]>end_point[0] and closest_point[1]==end_point[1]:
+            unclaimed_coords = unclaimed_coords[1:][::-1]
+        #east facing line, closest point ABOVE  end point
+        elif direction == "E" and closest_point[1]<end_point[1] and closest_point[0]==end_point[0]:
+            unclaimed_coords = unclaimed_coords[1:][::-1]
+        #west facing line, closest point BELOW end point
+        elif direction == "W" and closest_point[1]>end_point[1] and closest_point[0]==end_point[0]:
+            unclaimed_coords = unclaimed_coords[1:][::-1]
+
         #remove unecessary coords before the closest point
-        remaining_coords = unclaimed_coords[unclaimed_coords.index(closest_point):] + unclaimed_coords[:unclaimed_coords.index(closest_point)]
+        #print("IS CLOCKWISE")
+        #print(self.is_clockwise(unclaimed_coords))
+        #print(unclaimed_coords)
+        #print("TEST 1")
+        #print(unclaimed_coords[unclaimed_coords.index(closest_point):-1])
+        #print("TEST 2")
+        #print(unclaimed_coords[:unclaimed_coords.index(closest_point)+1])
+        remaining_coords = unclaimed_coords[unclaimed_coords.index(closest_point):-1] + unclaimed_coords[:unclaimed_coords.index(closest_point)+1]
         #print("REMAINING COORDS")
         #print(remaining_coords)
+        #print(unclaimed_coords)
 
         #print("ORIGINAL")
         #print(enclosed_shape_coords)
@@ -102,10 +128,43 @@ class Board:
             for i in range(len(remaining_coords)-1):
                 enclosed_shape_coords.append(remaining_coords[i])
                 if self.in_between(start_point,remaining_coords[i],remaining_coords[i+1]):
-                    #print("BREAK")
+                    print("BREAK")
                     break
-
+        
         return Polygon(enclosed_shape_coords)
+
+    def check_general_direction(self,end_point):
+        "given point (the end point) find what general direction it is facing"
+        p1, p2 = self.find_edge_with_point(self.current_unclaimed_space, end_point)
+        
+        #print("CHECK EDGE")
+        #print(p1)
+        #print(p2)
+        #print("DONE CHECK EDGE SEGMENT")
+        dx, dy = p2[0]-p1[0], p2[1]-p1[1]
+        ex , ey = end_point[0], end_point[1]
+        surface = pygame.display.get_surface()
+        if dx == 0:  # Vertical line (can be either facing E or W)
+            if surface.get_at((int(ex+5),int(ey))) == self.bg_color or surface.get_at((int(ex+5),int(ey))) == (238,87,35):
+                return "E"
+            else:
+                return "W"
+        
+        if dy == 0:  # Horizontal line (can be either facinge N or S)
+            if surface.get_at((int(ex),int(ey-5))) == self.bg_color or surface.get_at((int(ex),int(ey-5))) == (238,87,35):
+                return "N"
+            else:
+                return "S"
+
+    def find_edge_with_point(self, polygon, point):
+        "find the line segment that the point lies on"
+        coords = list(polygon.exterior.coords)
+        for i in range(len(coords)-1):
+            edge = LineString([coords[i], coords[i+1]])
+            if edge.contains(Point(point)):
+                return coords[i], coords[i+1]
+    
+        return None, None
     
     def in_between(self, p, a, b):
         # For vertical line: x values are the same for both a and b
@@ -133,10 +192,17 @@ class Board:
             area -= points[i][1]*points[i+1][0]
         return (area)/2 > 0
     
+    def make_clockwise(self,points):
+        "makes the orientation that the polygon points are drawn in to be clockwise"
+        if not self.is_clockwise(points):
+            return points[1:][::-1]
+        return points
+            
+    
     def draw(self, window):
         "draws board to window"
         im = self.im
-        pygame.draw.polygon(window,self.bg_color, list(self.current_unclaimed_space.exterior.coords))
+        pygame.draw.polygon(window,(252, 215, 203), list(self.current_unclaimed_space.exterior.coords))
         
         for i in self.current_border:
             #creates new border for marker to traverse
