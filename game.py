@@ -98,7 +98,6 @@ while running:
     # #if board.check_if_win():
     #     print("DONE")
     #TESTING REMOVE LATER
-
     
     
     if key[pygame.K_SPACE]:
@@ -117,6 +116,11 @@ while running:
 
     if sparx.sparx_collide(marker):
          marker.reduce_lives()
+    
+    if marker.pushed:
+        if sparx.push_collide(marker.push_points[0]):
+            marker.pos = marker.push_points[0]
+            marker.push_points = []
     
     pygame.display.flip()
     clock.tick(60)

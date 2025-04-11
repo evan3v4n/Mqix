@@ -189,7 +189,8 @@ class Marker:
         if self.pushed:
             self.pushed = False
             #Reset marker position to the starting point of the push
-            self.pos = self.push_points[0]
+            if len(self.push_points) > 0:
+                self.pos = self.push_points[0]
             #Reset the push points
             self.push_points = []
         

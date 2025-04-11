@@ -27,7 +27,7 @@ class Enemy:
 
     if type == "qix":
       # for qix, start at top right corner
-      self.pos = [screen_width - initial_margin - diameter, initial_margin + diameter]
+      self.pos = [screen_width//2, screen_height//2]
       self.change_direction() # Random initial direction
     else:
       # for sparx, start at top middle
@@ -139,14 +139,34 @@ class Enemy:
     if self.rect.collidepoint((marker.pos.x, marker.pos.y)):
       self.change_direction()
       return True
+    for i in marker.push_points:
+      if self.rect.collidepoint((i.x, i.y)):
+        self.change_direction()
+        marker.pos = marker.push_points[0]
+        marker.push_points = []
+        return True
+      
     return False
 
   def sparx_collide(self, marker): 
     """Checks for Sparx collision with player."""
-    # changes direction if collides with player
+    # Check collision with player
     if self.rect.collidepoint((marker.pos.x, marker.pos.y)):
-      self.change_direction()
-      return True
+        self.change_direction()
+        # Reverse the target point index
+        self.target_point_index = (self.target_point_index - 1) % len(self.border_points)
+        return True
+
+    # Check collision with marker's push points
+    for i in marker.push_points:
+        if self.rect.collidepoint((i.x, i.y)):
+            self.change_direction()
+            # Reverse the target point index
+            self.target_point_index = (self.target_point_index - 1) % len(self.border_points)
+            marker.pos = marker.push_points[0]
+            marker.push_points = []
+            return True
+
     return False
   
   def push_collide(self, starting_point): 
@@ -167,16 +187,18 @@ class Enemy:
     """Changes enemy's movements depending on their type."""
     if self.type == "qix":
       # change direction randomly
-      self.moving_left = random.choice([True, False])
-      self.moving_right = not self.moving_left
-      self.moving_up = random.choice([True, False])
-      self.moving_down = not self.moving_up
+      if random.random() < 0.5:
+        self.moving_left = random.choice([True, False])
+        self.moving_right = not self.moving_left
+      else:
+        self.moving_up = random.choice([True, False])
+        self.moving_down = not self.moving_up
     else:
       # change direction based on current direction
       if self.direction == "left":
         self.moving_left = False
         self.moving_right = True
-        self.direction == "right"
+        self.direction = "right"
       elif self.direction == "right":
         self.moving_left = True
         self.moving_right = False
@@ -196,4 +218,4 @@ class Enemy:
     if self.type == "qix":
       pygame.draw.circle(screen, (255, 0, 0), (self.pos[0], self.pos[1]), self.diameter)
     else:
-      pygame.draw.circle(screen, (0, 255, 0), (self.pos[0], self.pos[1]), self.diameter) 
+      pygame.draw.circle(screen, (0, 0, 255), (self.pos[0], self.pos[1]), self.diameter)
