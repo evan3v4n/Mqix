@@ -38,8 +38,8 @@ class Board:
         self.current_border.append(points)
         #create enclosed shape
         enclosed_shape=self.enclose_shape(points)
-        print("SHAPE ENCLOSED")
-        print(list(enclosed_shape.exterior.coords))
+        #print("SHAPE ENCLOSED")
+        #print(list(enclosed_shape.exterior.coords))
         #however enclosed shape may or may not be the right one, of the complement or the enclosed shape whichever has a smaller area
         if (self.current_unclaimed_space.difference(enclosed_shape)).area >= enclosed_shape.area: 
             self.current_unclaimed_space = self.current_unclaimed_space.difference(enclosed_shape)
@@ -76,7 +76,7 @@ class Board:
         print("START OF PROCESS")
         enclosed_shape_coords = points #keep tracks of the enclosed shape
         unclaimed_coords = list(self.current_unclaimed_space.exterior.coords)[:-1] #coords for the shape of the unclaimed area
-        print(unclaimed_coords)
+        #print(unclaimed_coords)
         start_point = points[0] #start of the push
         end_point = points[len(points)-1] #end of the push
         #finds closest point to the end of push
@@ -109,15 +109,15 @@ class Board:
         #remove unecessary coords before the closest point
         #print("IS CLOCKWISE")
         #print(self.is_clockwise(unclaimed_coords))
-        print(unclaimed_coords)
-        print("TEST 1")
-        print(unclaimed_coords[unclaimed_coords.index(closest_point):])
-        print("TEST 2")
-        print(unclaimed_coords[:unclaimed_coords.index(closest_point)+1])
+        #print(unclaimed_coords)
+        #print("TEST 1")
+        #print(unclaimed_coords[unclaimed_coords.index(closest_point):])
+        #print("TEST 2")
+        #print(unclaimed_coords[:unclaimed_coords.index(closest_point)+1])
         remaining_coords = unclaimed_coords[unclaimed_coords.index(closest_point):] + unclaimed_coords[:unclaimed_coords.index(closest_point)+1]
-        print("REMAINING COORDS")
-        print(remaining_coords)
-        print(unclaimed_coords)
+        #print("REMAINING COORDS")
+        #print(remaining_coords)
+        #print(unclaimed_coords)
 
         #print("ORIGINAL")
         #print(enclosed_shape_coords)
@@ -138,10 +138,10 @@ class Board:
         "given point (the end point) find what general direction it is facing"
         p1, p2 = self.find_edge_with_point(self.current_unclaimed_space, end_point)
         
-        print("CHECK EDGE")
-        print(p1)
-        print(p2)
-        print("DONE CHECK EDGE SEGMENT")
+        #print("CHECK EDGE")
+        #print(p1)
+        #print(p2)
+        #print("DONE CHECK EDGE SEGMENT")
         dx, dy = p2[0]-p1[0], p2[1]-p1[1]
         ex , ey = end_point[0], end_point[1]
         surface = pygame.display.get_surface()
@@ -162,9 +162,9 @@ class Board:
         coords = list(polygon.exterior.coords)
         for i in range(len(coords)-1):
             edge = LineString([coords[i], coords[i+1]])
-            print("POINT")
-            print(point)
-            print(edge)
+            #print("POINT")
+            #print(point)
+            #print(edge)
             if edge.contains(Point(point)):
                 return coords[i], coords[i+1]
     
