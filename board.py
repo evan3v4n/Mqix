@@ -164,7 +164,7 @@ class Board:
             edge = LineString([coords[i], coords[i+1]])
             #print("POINT")
             #print(point)
-            #print(edge)
+            print(edge)
             if edge.contains(Point(point)):
                 return coords[i], coords[i+1]
     

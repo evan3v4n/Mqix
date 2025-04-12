@@ -1,6 +1,7 @@
 import pygame
 from marker import Marker 
 from board import Board
+from enemy import Enemy
 
 # game setup
 pygame.init()
@@ -33,6 +34,9 @@ border_rect.center = (screen_width/2, screen_height/2)
 board = Board(screen_width,screen_height,initial_margin,window,bg_color)
 #create a marker instance
 marker = Marker(screen_width, screen_height, initial_margin,board=board)
+#create enemy instances
+qix = Enemy(screen_width, screen_height, initial_margin, "qix")
+sparx = Enemy(screen_width, screen_height, initial_margin, "sparx")
 
 while running:
     pygame.time.delay(100)
@@ -83,22 +87,21 @@ while running:
     key = pygame.key.get_pressed()
 
     #TESTING REMOVE LATER
-    if key[pygame.K_p]:
-         board.update_border([(200, 749), (200, 500), (49, 500)])
-    if key[pygame.K_o]:
-         board.update_border([(200,49),(200,200),(300,200),(300,600),(600,600),(600,49)])
+    #if key[pygame.K_p]:
+    #     board.update_border([(200, 749), (200, 500), (49, 500)])
+    #if key[pygame.K_o]:
+    #     board.update_border([(200,49),(200,200),(300,200),(300,600),(600,600),(600,49)])
     #if key[pygame.K_i]:
     #     board.update_border([(49,500),(749,500)]) 
     #if key[pygame.K_u]:
     #     board.update_border([(49,700),(749,700)]) 
-    if key[pygame.K_l]:
-       board.update_border([(49,300),(90,300),(90,500)]) 
-    if key[pygame.K_k]:
-       board.update_border([(600,749),(600,700),(700,700),(700,749)])
+    #if key[pygame.K_l]:
+    #   board.update_border([(49,300),(90,300),(90,500)]) 
+    #if key[pygame.K_k]:
+    #   board.update_border([(600,749),(600,700),(700,700),(700,749)])
     
     
     #TESTING REMOVE LATER
-
     
     
     if key[pygame.K_SPACE]:
@@ -107,6 +110,21 @@ while running:
     #print(f"turning points: {marker.turn_points}")   
     marker.move(key)
     marker.draw(window)
+    qix.draw(window)
+    sparx.draw(window)
+    qix.move()
+    sparx.move()
+    qix.change_direction()
+    if qix.qix_collide(marker):
+         marker.reduce_lives()
+
+    if sparx.sparx_collide(marker):
+         marker.reduce_lives()
+    
+    if marker.pushed:
+        if sparx.push_collide(marker.push_points[0]):
+            marker.pos = marker.push_points[0]
+            marker.push_points = []
     
     pygame.display.flip()
     clock.tick(60)
