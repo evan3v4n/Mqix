@@ -46,7 +46,7 @@ class Board:
         else:
             self.current_unclaimed_space = self.current_unclaimed_space.intersection(enclosed_shape)
         
-        print(list(self.current_unclaimed_space.exterior.coords))
+        #print(list(self.current_unclaimed_space.exterior.coords))
 
     
     
@@ -129,7 +129,7 @@ class Board:
             for i in range(len(remaining_coords)-1):
                 enclosed_shape_coords.append(remaining_coords[i])
                 if self.in_between(start_point,remaining_coords[i],remaining_coords[i+1]):
-                    print("BREAK")
+                    #print("BREAK")
                     break
         
         return Polygon(enclosed_shape_coords)
@@ -164,7 +164,7 @@ class Board:
             edge = LineString([coords[i], coords[i+1]])
             #print("POINT")
             #print(point)
-            print(edge)
+            #print(edge)
             if edge.contains(Point(point)):
                 return coords[i], coords[i+1]
     
